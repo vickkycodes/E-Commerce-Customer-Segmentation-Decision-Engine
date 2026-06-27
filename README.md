@@ -125,4 +125,16 @@ Reading the shape of each segment (interpretation, not ground truth — see Limi
 - **Visualization:** matplotlib
 - **Infra:** `google-cloud-bigquery`, `python-dotenv` for credential management
 
-## Suggested Repo Structure
+## How to Run
+
+1. Set up a GCP service account with BigQuery read access and a `.env` file (or environment variables) pointing to your credentials and `GOOGLE_APPLICATION_CREDENTIALS`
+2. `pip install -r requirements.txt`
+3. Run the notebook top to bottom — it pulls fresh data from the public dataset, so results will shift slightly run to run as the underlying table doesn't change but sampling/`LIMIT` ordering can
+4. Update `table_id` in the final cell to a BigQuery dataset you own before writing output
+
+## Limitations & Future Work
+
+- **Cluster separation is moderate, not crisp.** A silhouette score of ~0.34 means the four clusters are a reasonable summary of the data but overlap meaningfully — this is exploratory segmentation, not a guarantee that these are the "true" underlying customer types. Worth testing GMM or HDBSCAN as a comparison.
+- **The 3% anomaly contamination rate is an assumption**, not validated against any labeled fraud/anomaly ground truth. Treat the anomaly list as "worth a human look," not "confirmed problem accounts."
+- **Business-segment thresholds are heuristic** (e.g., the $200 AOV cutoff, the 365-day dormancy line). The natural next step is backtesting: did customers who actually got the win-back email come back at a higher rate than a control group?
+
